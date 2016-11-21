@@ -1,6 +1,6 @@
 package hr.magicpot.task.network;
 
-import hr.magicpot.task.HtmlContentRunnable;
+import hr.magicpot.task.network.runnable.HtmlContentRunnable;
 
 /**
  * Created by xxx on 18.11.2016..

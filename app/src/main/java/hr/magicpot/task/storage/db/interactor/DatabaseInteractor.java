@@ -9,9 +9,9 @@ import hr.magicpot.task.storage.db.model.DBModel;
 public interface DatabaseInteractor {
 
     interface onDatabaseCheckListener{
-        void onDBResponse(boolean response, String url);
+        void onDBResponse(boolean response, String url, long hashcode);
         void onDBError(String msg);
-        void onDBSucess();
+        void onDBSucess(String url, long hashcode);
     }
 
     void checkDatabase(String url);

@@ -11,4 +11,6 @@ public interface MainView {
     void hideProgressbar();
 
     void showMessage(String message);
+
+    void disableButtonFiveSec();
 }

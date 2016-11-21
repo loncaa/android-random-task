@@ -10,10 +10,11 @@ import hr.magicpot.task.storage.db.model.DBModel;
 
 public interface DatabaseManager {
     interface onDatabaseConnection{
-        void onRespones(boolean b, String url);
-        void onError();
+        void onRespones(String url, DBModel hashcode);
+        void onMessage(String msg);
+        void onStoreSuccess(String url, long hashcode);
     }
 
-    void chechDatabase(String url, onDatabaseConnection listener) throws SQLException;
-    void storeModel(DBModel model, onDatabaseConnection listener) throws SQLException;
+    void chechDatabase(String url, onDatabaseConnection listener);
+    void storeModel(DBModel model, onDatabaseConnection listener);
 }

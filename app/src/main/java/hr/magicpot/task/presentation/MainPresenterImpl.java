@@ -20,10 +20,10 @@ public class MainPresenterImpl implements MainPresenter, InternetInteractor.onWe
     private DatabaseInteractor databaseInteractor;
     private SharedPreferencesInteractor sharedPreferencesInteractor;
 
-    public MainPresenterImpl(MainView mainView, DBHelper helper) {
+    public MainPresenterImpl(MainView mainView) {
         this.mainView = mainView;
         this.internetInteractor = new InternetInteractorImpl();
-        this.databaseInteractor = new DatabaseInteractorImpl(this, helper);
+        this.databaseInteractor = new DatabaseInteractorImpl(this);
         this.sharedPreferencesInteractor = new SharedPreferenceInteratorImpl();
     }
 
@@ -35,18 +35,23 @@ public class MainPresenterImpl implements MainPresenter, InternetInteractor.onWe
     }
 
     /*Listeners*/
-    public void onDBResponse(boolean response, String url) {
-        if(response){
-            showMessage("Hashcode vec postoji u bazi.");
+    @Override
+    public void onDBResponse(boolean response, String url, long hascode) {
+        if(!response){
+            showMessage("Url vec postoji u bazi.\n" + url + " " + hascode );
+            mainView.hideProgressbar();
+            mainView.disableButtonFiveSec();
         }else {
             sharedPreferencesInteractor.check(url, this);
         }
     }
 
     @Override
-    public void onSPResponse(boolean response, String url) {
+    public void onSPResponse(boolean response, String url, long hascode) {
         if(response){
-            showMessage("Hashcode vec postoji u shared preferencu.");
+            showMessage("Url vec postoji u shared preferencu.\n" + url + " " + hascode);
+            mainView.disableButtonFiveSec();
+            mainView.hideProgressbar();
         }else{
             internetInteractor.getHtmlContent(url, this);
         }
@@ -62,12 +67,17 @@ public class MainPresenterImpl implements MainPresenter, InternetInteractor.onWe
         if(hashCode%2 == 0)
             databaseInteractor.store(model);
         else
-            sharedPreferencesInteractor.storeHashcode(url);
+            sharedPreferencesInteractor.storeHashcode(url, hashCode, this);
     }
 
     @Override
-    public void onDBSucess() {
-        showMessage("Uspjesno spremanje u bazu.");
+    public void onDBSucess(String url, long hascode) {
+        showMessage("Uspjesno spremanje u bazu.\n" + url + " " + hascode);
+    }
+
+    @Override
+    public void onSPStoreSuccess(String url, long hashcode) {
+        showMessage("Uspjesno spremanje u Shared preferences.\n" + url + " " + hashcode);
     }
 
     @Override

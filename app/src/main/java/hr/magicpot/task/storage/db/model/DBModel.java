@@ -7,17 +7,15 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * Created by xxx on 20.11.2016..
  */
-@DatabaseTable(tableName = "table")
+@DatabaseTable(tableName = "modeltable")
 public class DBModel {
 
     public static final String ID = "id";
     public static final String URL = "url";
-    public static final String URLHCODE = "url_hash";
     public static final String HASHCODE = "hash";
 
     @DatabaseField(columnName = ID, generatedId = true) private int id;
     @DatabaseField(columnName = URL, dataType = DataType.STRING) private String url;
-    @DatabaseField(columnName = URLHCODE, dataType = DataType.LONG) private long urlHashcode;
     @DatabaseField(columnName = HASHCODE, dataType = DataType.LONG) private long hashcode;
 
     public DBModel(){}
@@ -41,16 +39,6 @@ public class DBModel {
 
     public void setUrl(String url) {
         this.url = url;
-        long hc = this.url.trim().toLowerCase().hashCode();
-        this.setUrlHashcode(hc);
-    }
-
-    public long getUrlHashcode() {
-        return urlHashcode;
-    }
-
-    public void setUrlHashcode(long urlHashcode) {
-        this.urlHashcode = urlHashcode;
     }
 
     public long getHashcode() {

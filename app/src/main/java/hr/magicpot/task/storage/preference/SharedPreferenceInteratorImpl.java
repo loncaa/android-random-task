@@ -2,7 +2,7 @@ package hr.magicpot.task.storage.preference;
 
 import android.content.SharedPreferences;
 
-import hr.magicpot.task.userinterface.MainActivity;
+import hr.magicpot.task.MainApplication;
 
 /**
  * Created by xxx on 19.11.2016..
@@ -11,21 +11,19 @@ import hr.magicpot.task.userinterface.MainActivity;
 public class SharedPreferenceInteratorImpl implements SharedPreferencesInteractor {
 
     @Override
-    public void storeHashcode(String url) {
-        long hashcode = url.trim().toLowerCase().hashCode();
-        SharedPreferences sharedPreferences = MainActivity.getSPreferences("hashcode", 1);
+    public void storeHashcode(String url, long hashcode, onSharedPreferencesListener listener) {
+        SharedPreferences sharedPreferences = MainApplication.getSharedPref("hashcode", 1);
         SharedPreferences.Editor e = sharedPreferences.edit();
-        e.putLong(String.valueOf(hashcode), hashcode);
+        e.putLong(url, hashcode);
         e.commit();
+        listener.onSPStoreSuccess(url, hashcode);
     }
 
     @Override
     public void check(String url, onSharedPreferencesListener listener) {
-        long hash = url.trim().toLowerCase().hashCode();
-        SharedPreferences sharedPreferences = MainActivity.getSPreferences("hashcode", 1);
-        long l = sharedPreferences.getLong(String.valueOf(hash), 0);
-
-        boolean response = l != 0;
-        listener.onSPResponse(response, url);
+        SharedPreferences sharedPreferences = MainApplication.getSharedPref("hashcode", 1);
+        long hashcode = sharedPreferences.getLong(url, 0);
+        boolean hasurl =  hashcode != 0;
+        listener.onSPResponse(hasurl, url, hashcode);
     }
 }

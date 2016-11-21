@@ -7,9 +7,10 @@ package hr.magicpot.task.storage.preference;
 public interface SharedPreferencesInteractor {
 
     public interface onSharedPreferencesListener{
-        void onSPResponse(boolean b, String url);
+        void onSPResponse(boolean b, String url, long hashcode);
+        void onSPStoreSuccess(String url, long hashcode);
     }
 
-    void storeHashcode(String url);
+    void storeHashcode(String url, long hashcode, onSharedPreferencesListener listener);
     void check(String url, onSharedPreferencesListener listener);
 }

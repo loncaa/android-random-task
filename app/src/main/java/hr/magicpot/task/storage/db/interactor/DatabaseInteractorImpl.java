@@ -16,44 +16,40 @@ public class DatabaseInteractorImpl implements DatabaseInteractor, DatabaseManag
     private DatabaseManager databaseManager;
     private onDatabaseCheckListener listener;
 
-    public DatabaseInteractorImpl(onDatabaseCheckListener listener, DBHelper helper) {
+    public DatabaseInteractorImpl(onDatabaseCheckListener listener) {
         this.listener = listener;
-        this.databaseManager = new DatabaseManagerImpl(helper);
+        this.databaseManager = new DatabaseManagerImpl();
     }
 
     //inicijalizacija baze
     @Override
     public void checkDatabase(String url) {
         if(!url.equals(""))
-            try {
-                databaseManager.chechDatabase(url, this);
-            } catch (SQLException e) {
-                listener.onDBError("Greška priliko provjere pdoatka.");
-                e.printStackTrace();
-            }
+            databaseManager.chechDatabase(url, this);
         else
             listener.onDBError("Unesi url.");
     }
 
     @Override
     public void store(DBModel model) {
-
-        try {
-            databaseManager.storeModel(model, this);
-            listener.onDBSucess();
-        } catch (SQLException e) {
-            listener.onDBError("Greška priliko spremanja podataka.");
-            e.printStackTrace();
-        }
+        databaseManager.storeModel(model, this);
     }
 
     @Override
-    public void onRespones(boolean b, String url) {
-            listener.onDBResponse(b, url);
+    public void onRespones(String url, DBModel dbModel) {
+        if(dbModel != null)
+            listener.onDBResponse(false, url, dbModel.getHashcode());
+        else
+            listener.onDBResponse(true, url, 0);
     }
 
     @Override
-    public void onError() {
-        listener.onDBError("Greška prilikom spajanja na bazu.");
+    public void onMessage(String msg) {
+        listener.onDBError(msg);
+    }
+
+    @Override
+    public void onStoreSuccess(String url, long hashcode) {
+        listener.onDBSucess(url, hashcode);
     }
 }
